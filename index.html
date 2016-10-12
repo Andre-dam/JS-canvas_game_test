@@ -5,7 +5,7 @@
     <title>Test</title>
     <style>
     	* { padding: 0; margin: 0; }
-    	canvas { background: #eee; display: block; margin: 0 auto; }
+    	canvas { background: black; display: block; margin: 0 auto; }
     </style>
 </head>
 <body>
@@ -29,10 +29,12 @@
 	var brick_x_dist = 20;
 	var brick_y_dist = 15;
 	var score = 0;
+	var poder = 0;
+	var poder_usa = false;
+	var cooldown = 400;
 	var brick_array = [[1, 1, 1, 1, 1,1,1,1,1,1],[1, 1, 1, 1, 1,1,1,1,1,1],[1, 1, 1, 1, 1,1,1,1,1,1],[1, 1, 1, 1, 1,1,1,1,1,1]];
 		
-	function drawBrick(){
-		
+	function drawBrick(){		
 		for(i=0;i<4;i++){
 			for(j=0;j<10;j++){
 				if(brick_array[i][j]===1){
@@ -65,12 +67,33 @@
 		ctx.fill();
 		ctx.closePath();
 	}
+	function drawPoder(){
+		if(poder>0){
+			ctx.beginPath();
+			ctx.font = "30px Consolas";
+			ctx.fillStyle = "white";
+			ctx.fillText("power_av = "+poder+";",canvas.width-230,30);
+			ctx.closePath();
+		}
+		if(cooldown === 400){
+			dx = dx/0.2;
+			dy = dy/0.2;
+		}
+		if(poder_usa === true && poder>0 && cooldown>=400){
+			poder--;
+			cooldown=0;
+			dx = dx*0.2;
+			dy = dy*0.2;
+		}
+	}
 	function draw(){
+		cooldown++;
 		ctx.clearRect(0,0,canvas.width, canvas.height);
 		drawBall();
 		drawBarra();
 		drawBrick();
 		drawScore();
+		drawPoder();
 		collisionDetection();
 		if(x+10+dx >= canvas.width || x-10+dx <= 0){
 			dx=dx*-1;
@@ -95,6 +118,9 @@
 		else if(e.keyCode == 37) {
 			leftPressed = true;
 		}
+		if(e.keyCode == 32){
+			poder_usa = true;
+		}
 	}
 	function keyUpHandler(e) {
 		if(e.keyCode == 39) {
@@ -103,6 +129,9 @@
 		else if(e.keyCode == 37) {
 			leftPressed = false;
 		}
+		if(e.keyCode == 32){
+			poder_usa = false;
+		}
 	}
 	function collisionDetection() {
 		for(c=0; c<4; c++) {
@@ -110,6 +139,9 @@
 				if(brick_array[c][r]===1){
 					if(x > (brick_x_ref + r*(60+brick_x_dist)) && x < (brick_x_ref + r*(60+brick_x_dist)+60) && y>(brick_y_ref+ c*(30+brick_y_dist)) && y< (brick_y_ref+ c*(30+brick_y_dist)+30)){
 						score++;
+						if(score%2===0 && score!= 0){
+							poder++;
+						}
 						if(dx>0) dx+=0.2;
 						if(dx<0) dx-=0.2;
 						if(dy>0) dy+=0.2;
@@ -133,8 +165,9 @@
 	}
 	function drawScore(){
 		ctx.beginPath();
-		ctx.font = "20px Arial";
-		ctx.fillText("Score: "+score,20,30);
+		ctx.font = "30px Consolas";
+		ctx.fillStyle = "white";
+		ctx.fillText("score = "+score+";",15,30);
 		ctx.closePath();
 	}
 	document.addEventListener("keydown", keyDownHandler, false);
