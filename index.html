@@ -9,11 +9,12 @@
     </style>
 </head>
 <body>
-
+<audio id="slowmo_sound" src="slowmo.wav" preload="auto"></audio>
 <canvas id="myCanvas" width="960" height="640"></canvas>
 
 <script>
 	var canvas = document.getElementById("myCanvas");
+	var sound = document.getElementById("slowmo_sound");
 	var ctx = canvas.getContext("2d");
 	var x = canvas.width/2;
 	var y = canvas.height-41;
@@ -80,6 +81,7 @@
 			dy = dy/0.2;
 		}
 		if(poder_usa === true && poder>0 && cooldown>=400){
+			sound.play();
 			poder--;
 			cooldown=0;
 			dx = dx*0.2;
@@ -101,7 +103,7 @@
 		if(y-10+dy <= 0){
 			dy=dy*-1;
 		}
-		if(y+10+dy>=canvas.height-30 && (x+dx>=barraX-10 && x+dx<=barraX+barraWidth+10)){
+		if(y+10+dy>=canvas.height-30 && y+10 < canvas.height && (x+dx>=barraX-10 && x+dx<=barraX+barraWidth+10)){
 			dy=dy*-1;
 		}
 		if(y+dy+10 >= canvas.height){
