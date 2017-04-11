@@ -20,6 +20,7 @@
 	var y = canvas.height-41;
 	var dx = 1;
 	var dy = -1;
+	var mult = 1;
 	var barraHeight = 10;
 	var barraWidth = 75;
 	var barraX = (canvas.width-barraWidth)/2;
@@ -57,10 +58,10 @@
 	}
 	function drawBarra(){
 		if(rightPressed && barraX+barraWidth+Math.abs(dx)<canvas.width){
-			barraX+=Math.abs(dx);
+			barraX+=Math.abs(dx*mult);
 		}
 		if(leftPressed && barraX-Math.abs(dx)>0){
-			barraX-=Math.abs(dx);
+			barraX-=Math.abs(dx*mult);
 		}
 		ctx.beginPath();
 		ctx.rect(barraX,canvas.height-30,barraWidth,barraHeight);
@@ -79,6 +80,7 @@
 		if(cooldown === 400){
 			dx = dx/0.2;
 			dy = dy/0.2;
+			mult = 1;
 		}
 		if(poder_usa === true && poder>0 && cooldown>=400){
 			sound.play();
@@ -86,6 +88,7 @@
 			cooldown=0;
 			dx = dx*0.2;
 			dy = dy*0.2;
+			mult = 5;
 		}
 	}
 	function draw(){
